@@ -1,0 +1,7 @@
+/docs/
+/lib/
+/bin/
+/.shards/
+*.dwarf
+CRYSTAL_ENV.cr
+shard.lock

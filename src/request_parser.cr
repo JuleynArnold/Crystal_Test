@@ -4,7 +4,7 @@ require "../src/controller/login_controller.cr"
 
 module RequestParser
     extend self
-    def parse(request : HTTP::Request)
+    def parse(request)
         body = request.body
         headers = request.headers
 

@@ -2,11 +2,11 @@ require "../../src/controller/controller.cr"
 
 class LoginController < Controller
     def content
-        @content
+        @content = Hash(String, String).new
     end
 
     def name
-        @name
+        @name = String.new
     end
 
     def initialize(requestModule : String, body)

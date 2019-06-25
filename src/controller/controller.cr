@@ -1,4 +1,4 @@
 class Controller
-    def initialize(requestModule : String)
+    def initialize(requestModule : String, body : String)
     end
 end

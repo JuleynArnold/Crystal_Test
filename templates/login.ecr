@@ -1,13 +1,13 @@
-<form class="" style="margin:0;" action="<%= @content['actionRoute'] %>" method="POST">
+<form class="" style="margin:0;" action="<%= @template_parameters["actionRoute"] %>" method="POST">
     <div class="">
-        <label class="" for="username"><b><%= @content['username'] %>"</b></label>
+        <label class="" for="username"><b><%= @template_parameters["username"] %></b></label>
         <div class="">
             <input type="text" id="username" name="username">
         </div>
     </div>
     <div class="">
         <label class="" for="password">
-            <b><%= @content['password'] %>"</b>
+            <b><%= @template_parameters["password"] %></b>
         </label>
         <div class="">
             <input type="password" id="password" name="password">

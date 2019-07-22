@@ -1,0 +1,192 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Basic File Storage API",
+        "version": "1.0.0",
+        "title": "File Storage",
+        "contact": {
+            "email": "juleynarnold@movehq.com"
+        }
+    },
+    "host": "todo.getahost.com",
+    "basePath": "/v1",
+    "tags": [
+        {
+            "name": "file",
+            "description": "Upload, Download and check files on the server"
+        },
+        {
+            "name": "authenticate",
+            "description": "Authenticates the User"
+        }
+    ],
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "paths": {
+        "/file": {
+            "get": {
+                "tags": [
+                    "file"
+                ],
+                "summary": "Returns all files that need to be updated on the client",
+                "description": "Downloads all server side updated files for the client",
+                "operationId": "updateallfiles",
+                "produces": [
+                    "multipart/mixed"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "header",
+                        "description": "JWT Token generated from the /authenticate endpoint",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/file_get_response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "file"
+                ],
+                "summary": "Uploads all updated files on the client",
+                "description": "Uploads all client side updated files",
+                "operationId": "downloadallfiles",
+                "consumes": [
+                    "multipart/mixed"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "header",
+                        "description": "JWT Token generated from the /authenticate endpoint",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/file_get_response"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/file_post_response"
+                        }
+                    }
+                }
+            }
+        },
+        "/authenticate": {
+            "post": {
+                "tags": [
+                    "authenticate"
+                ],
+                "summary": "Authenticates the user",
+                "description": "Creates a jwt token given a username and password",
+                "operationId": "auth",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/auth_request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/auth_response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "file_get_request": {
+            "type": "string",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+            }
+        },
+        "file_get_response": {
+            "format": "binary",
+            "properties": {
+                "media": {
+                    "type": "object"
+                }
+            }
+        },
+        "file_post_response": {
+            "type": "string",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "status": "success"
+            }
+        },
+        "auth_request": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "username": "Some Username",
+                "password": "Some Password"
+            }
+        },
+        "auth_response": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Github Page",
+        "url": "https://github.com/JuleynArnold/Crystal_Test"
+    }
+}

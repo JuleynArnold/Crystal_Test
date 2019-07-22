@@ -1,20 +1,27 @@
 require "../../src/controller/controller.cr"
 
 class LoginController < Controller
+    def initialize(context : HTTP::Server::Context)
+        @context = context
+        @content = Hash{"username" => "LBL_USERNAME", "password" => "LBL_PASSWORD", "actionRoute" => "authenticate"}
+        @name = "Login"
+    end
+
+    def generateView()
+        #Something create new view or pass in view have not decided
+        view = LoginView.new(@content)
+        return view.renderView()
+    end
+
     def content
-        @content = Hash(String, String).new
+        @content
+    end
+
+    def context
+        @context
     end
 
     def name
-        @name = String.new
-    end
-
-    def initialize(requestModule : String, body)
-        #TODO: Eventually do something with the body
-        @content = Hash(String, String).new
-        @content["username"] = "LBL_USERNAME"
-        @content["password"] = "LBL_PASSWORD"
-        @content["actionRoute"] = "authenticate"
-        @name = requestModule
+        @name
     end
 end

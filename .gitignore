@@ -6,3 +6,4 @@
 CRYSTAL_ENV.cr
 shard.lock
 /logs/
+/storage/

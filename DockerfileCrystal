@@ -1,0 +1,33 @@
+#Base docker image
+FROM ubuntu:latest
+
+#Create args and env variables
+ARG working_dir
+
+#Ubunut prerequisites
+RUN apt-get update
+RUN apt install curl -y
+RUN apt-get install gnupg2 -y
+
+#Get Crystal sources
+RUN curl -sSL https://dist.crystal-lang.org/apt/setup.sh | bash
+RUN curl -sL "https://keybase.io/crystal/pgp_keys.asc" |  apt-key add -
+RUN echo "deb https://dist.crystal-lang.org/apt crystal main" | tee /etc/apt/sources.list.d/crystal.list
+RUN apt-get update
+
+#Optional dependencies
+RUN apt install libssl-dev -y
+RUN apt install libxml2-dev -y
+RUN apt install libyaml-dev -y
+RUN apt install libgmp-dev -y
+RUN apt install libreadline-dev -y
+RUN apt install libz-dev -y
+
+#Actual Crystal Install
+RUN apt install crystal -y
+
+#Build Crystal Docker bind with local
+COPY . $working_dir
+COPY CRYSTAL_ENV_EXAMPLE.cr $working_dir/CRYSTAL_ENV.cr
+WORKDIR $working_dir
+CMD shards install && crystal run src/main.cr --release

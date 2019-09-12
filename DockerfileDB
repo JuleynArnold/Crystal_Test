@@ -1,0 +1,3 @@
+FROM mysql/mysql-server
+#RUN mysql -uroot -ptest crystalapp
+#RUN mysql -ptest -uroot crystalapp < config-files/db-init.sql

@@ -16,6 +16,6 @@ server = HTTP::Server.new do |context|
     context.response.print response.content
 end
 
-address = server.bind_tcp ENV["LOCAL_HOST"], 4000
-puts "Listening on http://#{address}"
+#May add back in host as second param
+address = server.bind_tcp 4000
 server.listen

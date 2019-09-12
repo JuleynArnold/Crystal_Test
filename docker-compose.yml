@@ -1,0 +1,47 @@
+version: "3.5"
+
+networks:
+    backend:
+        name: my-backplane-net
+    frontend:
+        name: my-global-net
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.20.0.0/30
+
+services:
+    dev-crystallang:
+        build:
+            context: .
+            dockerfile: DockerfileCrystal
+            args:
+                current_branch: master
+                working_dir: /code/
+        container_name: dev-crystallang
+        #volumes:
+        #    - type: bind
+        #      source: project
+        #      target: /code/
+        ports:
+            - "4000:4000"
+        networks:
+            - backend
+            - frontend
+
+    dev-database:
+        restart: always
+        build:
+            context: .
+            dockerfile: DockerfileDB
+        container_name: dev-database
+        environment:
+            MYSQL_DATABASE: 'crystal_production'
+            MYSQL_ROOT_PASSWORD: 'test'
+            MYSQL_ROOT_HOST: '127.0.0.1'
+        ports:
+        - '3306:3306'
+        expose:
+        - '3306'
+        networks:
+            - backend

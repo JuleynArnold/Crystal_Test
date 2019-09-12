@@ -17,5 +17,5 @@ server = HTTP::Server.new do |context|
 end
 
 #May add back in host as second param
-address = server.bind_tcp 4000
+address = server.bind_tcp ENV["HOST"], 4000
 server.listen

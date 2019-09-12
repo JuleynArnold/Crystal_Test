@@ -2,13 +2,7 @@ version: "3.5"
 
 networks:
     backend:
-        name: my-backplane-net
-    frontend:
-        name: my-global-net
-        ipam:
-          driver: default
-          config:
-            - subnet: 172.20.0.0/30
+        name: crystal-backend
 
 services:
     dev-crystallang:
@@ -19,15 +13,12 @@ services:
                 current_branch: master
                 working_dir: /code/
         container_name: dev-crystallang
-        #volumes:
-        #    - type: bind
-        #      source: project
-        #      target: /code/
         ports:
             - "4000:4000"
+        expose:
+            - "4000"
         networks:
             - backend
-            - frontend
 
     dev-database:
         restart: always

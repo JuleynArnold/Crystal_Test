@@ -1,4 +1,4 @@
-require "./route.cr"
+require "../../routes.cr"
 
 class RouteHandler
     property routes
@@ -6,12 +6,13 @@ class RouteHandler
     def initialize()
         @routes = Hash(String, Route).new
         #Routes
-        @routes["/"] = LoginRoute.new "GET", "/", "text/html"
+        @routes["/"] = LoginRoute.new "GET", "/", "text/html", false
 
         #API Routes (TODO: find some way to version the path)
-        @routes["/api/v1/file"] = FilePostRoute.new "POST", "/api/v1/file", "application/json"
-        #@routes[""] = Route.new "GET", "/api/v1/file", "../api/api.cr@updateClient"
-        #@routes[""] = Route.new "POST", "/authenticate", "../api/api.cr@authenticate"
+        @routes["/generateSession"] = GenerateSessionRoute.new "POST", "/generateSession", "application/json", false
+        @routes["/file"] = FilePostRoute.new "POST", "/file", "application/json", true
+        #@routes[""] = Route.new "GET", "/v1/file", "../api/api.cr@updateClient"
+        @routes["/authenticate"] = AuthenticateRoute.new "POST", "/authenticate", "application/json", false
     end
 
     def addRoute(name, controller, controllermethod, httpmethod, uri)

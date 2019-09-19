@@ -2,21 +2,36 @@ require "db"
 require "mysql"
 
 class Database
-    def initialize(type : String, host : String,  port : String, name : String, user : String, password : String)
-        connectionString = "#{type}://#{user}:#{password}@#{host}:#{port}/#{name}"
-        @db = DB.open connectionString
+    @connectionString = String.new
+
+    def initialize()
+        type = ENV["DB_TYPE"]
+        host = ENV["DB_SERVER"]
+        port = ENV["DB_PORT"]
+        name = ENV["DB_NAME"]
+        user = ENV["DB_USER"]
+        password = ENV["DB_PASS"]
+        @connectionString = "#{type}://#{user}:#{password}@#{host}:#{port}/#{name}"
     end
 
-    def pquery(sql : String, params : Array)
-        result = @db.query sql, params
-        return result
+    def pquery(sql : String, params : NamedTuple)
+        count = 0
+        queryResults = Hash(Int32, Hash(String, String)).new
+        DB.open @connectionString do |db|
+            db.query(sql, params) do |rs|
+                row = {} of String => String
+                params.each do |key, value|
+                    row[key.to_s] = rs.read(String)
+                end
+                queryResults[count] = row
+                count+= 1
+            end
+        end
+        return queryResults
     end
 
-    def close()
-        @db.close
-    end
-
-    def db
-        @db = DB::Database.new
+    def selectOne(sql : String, params : NamedTuple)
+        queriedResults = pquery(sql, params)
+        return queriedResults[0]
     end
 end

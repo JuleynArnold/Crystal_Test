@@ -2,12 +2,18 @@
 FROM ubuntu:latest
 
 #Create args and env variables
-ARG working_dir
+ARG working_dir=/code/
 
-#Ubunut prerequisites
+#Ubuntu prerequisites
 RUN apt-get update
-RUN apt install curl -y
+RUN apt-get install curl -y
 RUN apt-get install gnupg2 -y
+RUN apt-get install git -y
+RUN apt-get install build-essential -y
+
+#dependencies
+RUN git clone https://github.com/P-H-C/phc-winner-argon2.git argon2
+RUN cd argon2 && make && make install && cd ../ && rm -rf
 
 #Get Crystal sources
 RUN curl -sSL https://dist.crystal-lang.org/apt/setup.sh | bash

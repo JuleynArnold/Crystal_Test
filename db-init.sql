@@ -21,7 +21,7 @@ CREATE TABLE Files (
 );
 CREATE TABLE Sessions (
     sessionid VARCHAR(255) NOT NULL,
-    expirationtime INT NOT NULL,
+    expirationtime BIGINT NOT NULL,
     userid INT NOT NULL,
     createddate DATETIME DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (sessionid),

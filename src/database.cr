@@ -14,6 +14,10 @@ class Database
         @connectionString = "#{type}://#{user}:#{password}@#{host}:#{port}/#{name}"
     end
 
+    #Executes mutable and or nonmutable statements onto the database
+    #@param String sql SQL statement to be executed
+    #@param NamedTuple list of parameters used in the SQL statement
+    #@return String column from a single row
     def pexec(sql : String, params : NamedTuple)
         transformedParams = transformParameters(params)
         DB.open @connectionString do |db|
@@ -21,29 +25,27 @@ class Database
         end
     end
 
-    def pquery(sql : String, params : NamedTuple)
-        #TODO: Probably give this the option for the Int32 to be the id instead of sequential count
-        count = 0
-        queryResults = Hash(Int32, Hash(String, String)).new
+    def pquery(sql : String, params : NamedTuple, returnTypes : NamedTuple)
         transformedParams = transformParameters(params)
         DB.open @connectionString do |db|
-            db.query(sql, transformedParams) do |rs|
-                row = {} of String => String
-                params.each do |key, value|
-                    row[key.to_s] = rs.read(String)
-                end
-                queryResults[count] = row
-                count+= 1
-            end
+            return db.query_all sql, transformedParams, as: returnTypes.class.types
         end
-        return queryResults
     end
 
+    #Selects one column out of the database from the queried row
+    #@param String sql SQL statement to be executed
+    #@param NamedTuple list of parameters used in the SQL statement
+    #@return String column from a single row
     def selectOne(sql : String, params : NamedTuple)
-        queriedResults = pquery(sql, params)
-        return queriedResults[0]
+        item = ""
+        DB.open @connectionString do |db|
+            item = db.query_one sql, params as: String
+        end
+        return item
     end
 
+    #Transforms parameters into a format that can be consued by the DB class
+    #@param NamedTuple parameter list to be transformed
     def transformParameters(params : NamedTuple)
         newParams = [] of DB::Any
         params.each_value do |value|

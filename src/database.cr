@@ -14,11 +14,20 @@ class Database
         @connectionString = "#{type}://#{user}:#{password}@#{host}:#{port}/#{name}"
     end
 
+    def pexec(sql : String, params : NamedTuple)
+        transformedParams = transformParameters(params)
+        DB.open @connectionString do |db|
+            db.exec sql, transformedParams
+        end
+    end
+
     def pquery(sql : String, params : NamedTuple)
+        #TODO: Probably give this the option for the Int32 to be the id instead of sequential count
         count = 0
         queryResults = Hash(Int32, Hash(String, String)).new
+        transformedParams = transformParameters(params)
         DB.open @connectionString do |db|
-            db.query(sql, params) do |rs|
+            db.query(sql, transformedParams) do |rs|
                 row = {} of String => String
                 params.each do |key, value|
                     row[key.to_s] = rs.read(String)
@@ -34,4 +43,13 @@ class Database
         queriedResults = pquery(sql, params)
         return queriedResults[0]
     end
+
+    def transformParameters(params : NamedTuple)
+        newParams = [] of DB::Any
+        params.each_value do |value|
+            newParams << value.to_s
+        end
+        return newParams
+    end
+
 end

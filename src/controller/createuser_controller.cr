@@ -7,15 +7,19 @@ class CreateUserController < Controller
 
     def createUser()
         db = Database.new
-        username = @context.request.body.username
-        password = @context.request.body.password
+        formData = Hash(String, String).new
+        HTTP::FormData.parse(@context.request) do |part|
+           formData[part.name] = part.body.gets_to_end
+        end
+        username = formData["username"]
+        password = formData["password"]
         hasher = Argon2::Password.new(t_cost: 2, m_cost: 16)
         passwordHashed = hasher.create(password)
         userbasefilepath = Random::Secure.base64(20)
-        parameters = {username: username, password: passwordHashed, salt: salt, basefilepath: userbasefilepath}
-        db.pquery("INSERT INTO Users (username, password, salt, basefilepath), VALUES (?,?,?,?)", parameters)
+        parameters = {username: username, password: passwordHashed, basefilepath: userbasefilepath}
+        db.pexec("INSERT INTO Users (username, password, basefilepath) VALUES (?,?,?)", parameters)
         fork do
-            system "mkdir storage/" . userbasefilepath
+            system "mkdir storage/" + userbasefilepath
         end
         return {success: true, message: "User Created"}.to_json
     end

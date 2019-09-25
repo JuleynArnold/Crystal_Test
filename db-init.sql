@@ -1,10 +1,9 @@
 CREATE DATABASE Crystal_Test;
-USE DATABASE Crystal_Test;
+USE Crystal_Test;
 CREATE TABLE Users (
     userid int NOT NULL AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    salt VARCHAR(255) NOT NULL,
     basefilepath VARCHAR(255) NOT NULL,
     PRIMARY KEY (userid)
 );
@@ -15,8 +14,8 @@ CREATE TABLE Files (
     filesize INT,
     location VARCHAR(255),
     encryptionmethod VARCHAR(255),
-    createdtime DATETIME DEFAULT GETUTCDATE(),
-    updatetime DATETIME DEFAULT GETUTCDATE(),
+    createdtime DATETIME DEFAULT CURRENT_TIMESTAMP(),
+    updatetime DATETIME DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (fileid),
     FOREIGN KEY (userid) REFERENCES Users(userid)
 );
@@ -24,7 +23,7 @@ CREATE TABLE Sessions (
     sessionid VARCHAR(255) NOT NULL,
     expirationtime INT NOT NULL,
     userid INT NOT NULL,
-    createddate DATETIME DEFAULT GETUTCDATE(),
+    createddate DATETIME DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (sessionid),
     FOREIGN KEY (userid) REFERENCES Users(userid)
 );

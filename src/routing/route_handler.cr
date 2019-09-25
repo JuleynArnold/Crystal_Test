@@ -9,10 +9,10 @@ class RouteHandler
         @routes["/"] = LoginRoute.new "GET", "/", "text/html", false
 
         #API Routes (TODO: find some way to version the path)
-        @routes["/generateSession"] = GenerateSessionRoute.new "POST", "/generateSession", "application/json", false
-        @routes["/file"] = FilePostRoute.new "POST", "/file", "application/json", true
-        #@routes[""] = Route.new "GET", "/v1/file", "../api/api.cr@updateClient"
+        @routes["/createuser"] = CreateUserRoute.new "POST", "/createuser", "application/json", false
         @routes["/authenticate"] = AuthenticateRoute.new "POST", "/authenticate", "application/json", false
+        @routes["/file"] = FilePostRoute.new "POST", "/file", "application/json", true
+        @routes["/authorize"] = AuthorizeRoute.new "POST", "/authorize", "application/json", true
     end
 
     def addRoute(name, controller, controllermethod, httpmethod, uri)

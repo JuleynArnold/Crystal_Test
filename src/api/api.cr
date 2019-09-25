@@ -37,7 +37,7 @@ class Api
 
     end
 
-    def authenticate()
+    def authorize()
         #Ensure sessionID 1ist still valid
         token = @context.request.headers["Authorization"]
         if token.empty? == false
@@ -52,7 +52,7 @@ class Api
         end
     end
 
-    def login()
+    def authenticate()
         #TODO: Create session name with time expired
         payload, header = JWT.decode(@context.request.headers["Authorization"], ENV["APP_SECRET"], JWT::Algorithm::HS256)
         db = Database.new

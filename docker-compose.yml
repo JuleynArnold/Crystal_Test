@@ -18,6 +18,8 @@ services:
             - "4000"
         networks:
             - backend
+        links:
+            - "dev-database:database"
 
     dev-database:
         restart: always

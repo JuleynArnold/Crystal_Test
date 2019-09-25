@@ -36,4 +36,4 @@ RUN apt install crystal -y
 COPY . $working_dir
 COPY CRYSTAL_ENV_EXAMPLE.cr $working_dir/CRYSTAL_ENV.cr
 WORKDIR $working_dir
-CMD shards install && crystal run src/main.cr --release
+CMD shards update && shards install && crystal run src/main.cr --release

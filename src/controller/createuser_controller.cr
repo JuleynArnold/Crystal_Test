@@ -17,7 +17,7 @@ class CreateUserController < Controller
         passwordHashed = hasher.create(password)
         userbasefilepath = Random::Secure.base64(20)
         parameters = {username: username, password: passwordHashed, basefilepath: userbasefilepath}
-        db.pquery("INSERT INTO Users (username, password, basefilepath), VALUES (?,?,?,?)", parameters)
+        db.pexec("INSERT INTO Users (username, password, basefilepath) VALUES (?,?,?)", parameters)
         fork do
             system "mkdir storage/" + userbasefilepath
         end

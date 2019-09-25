@@ -1,6 +1,16 @@
+#Travis CI Build
+dist: xenial
 language: crystal
+crystal:
+    - latest
+    - nightly
 
-# Uncomment the following if you'd like Travis to run specs and check code formatting
-# script:
-#   - crystal spec
-#   - crystal tool format --check
+branches:
+    only:
+        - master
+        - proposed_updates
+#script:
+#    - test/route_testing/createuser_test.cr
+#    - test/route_testing/login_test.cr
+#    - test/api_testing/authenticate_test.cr
+#    - test/api_testing/authorize_test.cr

@@ -21,9 +21,12 @@ module Credentials
         db = Database.new
         parameters = {sessionid: ssid}
         returnTypes = {expirationtime: 0}
-        result = db.pquery("SELECT expirationtime FROM Sessions WHERE sessionid = ?", parameters, returnTypes)
-        row = result[0]
-        if now - row["expirationtime"].to_i > @@SESSION_EXPIRATION_TIME
+        result = db.selectRow("SELECT expirationtime FROM Sessions WHERE sessionid = ?", parameters, returnTypes)
+        if result.is_a?(Nil)
+            return false
+        end
+
+        if now - result["expirationtime"].to_i > @@SESSION_EXPIRATION_TIME
             return false
         else
             return true
@@ -33,7 +36,8 @@ module Credentials
     def self.retrieveUser(ssid)
         db = Database.new
         parameters = {sessionid: ssid}
-        user = db.pquery("SELECT * FROM Users where username = (SELECT userid FROM Sessions WHERE sessionid = ?)", parameters)
+        returnTypes = {userid: 0, username: "", password: "", basefilepath: ""}
+        user = db.selectRow("SELECT * FROM Users where userid = (SELECT userid FROM Sessions WHERE sessionid = ?)", parameters, returnTypes)
         return user
     end
 end

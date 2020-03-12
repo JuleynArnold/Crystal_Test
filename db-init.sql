@@ -15,7 +15,7 @@ CREATE TABLE Files (
     location VARCHAR(255),
     encryptionmethod VARCHAR(255),
     createdtime DATETIME DEFAULT CURRENT_TIMESTAMP(),
-    updatetime DATETIME DEFAULT CURRENT_TIMESTAMP(),
+    updatedtime DATETIME DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (fileid),
     FOREIGN KEY (userid) REFERENCES Users(userid)
 );
@@ -23,7 +23,7 @@ CREATE TABLE Sessions (
     sessionid VARCHAR(255) NOT NULL,
     expirationtime BIGINT NOT NULL,
     userid INT NOT NULL,
-    createddate DATETIME DEFAULT CURRENT_TIMESTAMP(),
+    createdtime DATETIME DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (sessionid),
     FOREIGN KEY (userid) REFERENCES Users(userid)
 );

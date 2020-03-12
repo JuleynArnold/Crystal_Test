@@ -6,10 +6,10 @@ ARG working_dir=/code/
 
 #Ubuntu prerequisites
 RUN apt-get update
-RUN apt-get install curl -y
-RUN apt-get install gnupg2 -y
-RUN apt-get install git -y
-RUN apt-get install build-essential -y
+RUN apt-get install -y curl \
+                    gnupg2 \
+                    git \
+                    build-essential 
 
 #dependencies
 RUN git clone https://github.com/P-H-C/phc-winner-argon2.git argon2
@@ -22,12 +22,12 @@ RUN echo "deb https://dist.crystal-lang.org/apt crystal main" | tee /etc/apt/sou
 RUN apt-get update
 
 #Optional dependencies
-RUN apt install libssl-dev -y
-RUN apt install libxml2-dev -y
-RUN apt install libyaml-dev -y
-RUN apt install libgmp-dev -y
-RUN apt install libreadline-dev -y
-RUN apt install libz-dev -y
+RUN apt install -y libssl-dev \
+                libxml2-dev \
+                libyaml-dev \
+                libgmp-dev \
+                libreadline-dev \
+                libz-dev -y
 
 #Actual Crystal Install
 RUN apt install crystal -y

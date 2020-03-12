@@ -13,6 +13,7 @@ class RouteHandler
         @routes["/authenticate"] = AuthenticateRoute.new "POST", "/authenticate", "application/json", false
         @routes["/file"] = FilePostRoute.new "POST", "/file", "application/json", true
         @routes["/authorize"] = AuthorizeRoute.new "POST", "/authorize", "application/json", true
+        @routes["/sync"] = FileGetRoute.new "GET", "/sync", "*/*", true
     end
 
     def addRoute(name, controller, controllermethod, httpmethod, uri)

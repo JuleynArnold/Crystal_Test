@@ -1,27 +1,16 @@
-# ctest
+# Project Description
 
-TODO: Write a description here
+Test/Practice Application written in crystal used for digital storage of files
+via API.
 
-## Installation
+## Installation/Usage
 
-TODO: Write installation instructions here
+github git@github.com:JuleynArnold/Crystal_Test.git
+docker-compose up
+or
+docker-pull juleynarnolddev/crystal-test:latest
 
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-TODO: Write development instructions here
-
-## Contributing
-
-1. Fork it (<https://github.com/your-github-user/ctest/fork>)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
 
 ## Contributors
 
-- [Juleyn Arnold](https://github.com/your-github-user) - creator and maintainer
+- [Juleyn Arnold](https://github.com/JuleynArnold) - creator and maintainer

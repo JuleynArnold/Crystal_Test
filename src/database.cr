@@ -25,6 +25,16 @@ class Database
         end
     end
 
+    #Executes mutable and or nonmutable statements onto the database
+    #@param String sql SQL statement to be executed
+    #@param NamedTuple list of parameters used in the SQL statement
+    #@return String column from a single row
+    def exec(sql : String)
+        DB.open @connectionString do |db|
+            db.exec sql
+        end
+    end
+
     def pquery(sql : String, params : NamedTuple, returnTypes : NamedTuple)
         transformedParams = transformParameters(params)
         DB.open @connectionString do |db|
@@ -32,6 +42,16 @@ class Database
         end
     end
 
+    def selectRow(sql : String, params : NamedTuple, returnTypes)
+        result = pquery(sql, params, returnTypes)
+        begin
+            row = result[0]
+            return row
+        rescue
+            return nil
+        end
+    end
+    
     #Selects one column out of the database from the queried row
     #@param String sql SQL statement to be executed
     #@param NamedTuple list of parameters used in the SQL statement

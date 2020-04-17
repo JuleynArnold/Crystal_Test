@@ -10,31 +10,51 @@ class Api
         @context = context
     end
 
-    #
+    #Updates the client with
     def updateClient()
 
     end
 
+    #Recieves the files from the client and uploads them to the server
+    #@return String JSON success or failure message
     def updateServer()
-        #user = Credentials.retrieveUser @context.request.headers["Authorization"]
+        user = Credentials.retrieveUser @context.request.headers["Authorization"]
         #Iterate through form data and
-        #HTTP::FormData.parse(@context.request) do |part|
-        #   filedata = part.body.gets_to_end
-        #   filename = part.filename
-        #   path = FileIO.writeFile(filename, filedata, user["basepath"])
-        #   FileIO.fileEncrypt(filename, path, user["password"])
-        #end
-        #json = {success: true}.to_json
-        #return json
+        HTTP::FormData.parse(@context.request) do |part|
+           filedata = part.body.gets_to_end
+           filename = part.filename
+           if user.is_a?(NamedTuple)
+               fullbasepath = "storage/" + user["basefilepath"]
+               isFileWritten = FileIO.writeFile(filename, filedata, fullbasepath)
+               if isFileWritten == true
+                   newFileName = FileIO.fileEncrypt(filename, fullbasepath, user["password"])
+                   #size = FileIO.getFileSize(newFileName, fullbasepath)
+                   FileIO.addFileRecord(user["userid"], newFileName, 0, fullbasepath, "aes-128-gcm")
+               else
+                   return {success: false, message: "Failure to write one or more files for the given user"}.to_json
+               end
+           else
+               return {success: false, message: "Failure to find cloud storage for the given user"}.to_json
+           end
+        end
+        return {success: true}.to_json
     end
 
-    #
-    def uploadFile()
-    end
+    #Returns file updated on the client side to the user.
+    #@return String JSON success of failure message
+    def updateClient()
+        db = Database.new
+        sql = "SELECT filename, filesize, createdtime, updatedtime FROM Files WHERE userid = ?" #TODO query based on updated time difference.
+        user = Credentials.retrieveUser @context.request.headers["Authorization"]
 
-    #
-    def downloadFile()
+        if user.is_a?(Nil)
+            return {success: false, message: "Could not find a user with the given credentials"}.to_json
+        end
 
+        params = {userid: user["userid"]}
+        returnTypes =  {filename: "", filesize: 0, createdtime: Time.utc, updatedtime: Time.utc}
+        files = db.pquery(sql, params, returnTypes)
+        return {success: true, contents: files}.to_json
     end
 
     def authorize()
@@ -58,8 +78,12 @@ class Api
         db = Database.new
         parameters = {username: payload["username"].to_s}
         returnTypes = {userid: 0, password: ""}
-        results = db.pquery("SELECT userid, password FROM Users where username = ?", parameters, returnTypes)
-        user = results[0]
+        user = db.selectRow("SELECT userid, password FROM Users where username = ?", parameters, returnTypes)
+
+        if user.is_a?(Nil)
+            return {success: false, message: "Could not find a user with the given credentials"}.to_json
+        end
+
         attemptedPassword = payload["password"].to_s
         dbPassword = user["password"]
         begin
